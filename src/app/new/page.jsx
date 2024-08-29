@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 
 function NewPage({ params }) {
     const router = useRouter();
-    const [title, setTitle] = useState("")
+    const [tittle, setTitle] = useState("")
     const [description, setDescription] = useState("")
 
     useEffect(() => {
@@ -21,29 +21,20 @@ function NewPage({ params }) {
     const onSubmit = async (e) =>{
         e.preventDefault();
         if (params.id){
-                await fetch(`/api/task/${params.id}`), {
+            const result = await fetch(`/api/task/${params.id}`, {
                 method: "PUT",
-                body: JSON.stringify({ title, description }),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }
-            console.log(res)
+                body: JSON.stringify({ tittle, description }),
+                headers: { 'Content-Type': 'application/json' },
+            })
         }else{
-            // const title = e.target.title.value
-            // const description = e.target.description.value
-
-            const res = await fetch('/api/task', {
+            const result = await fetch('/api/task', {
                 method: "POST",
-                body: JSON.stringify({ tittle:title, description:description }),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }
-        }
-        // const data = await res.json()
-        router.refresh()
+                body: JSON.stringify({ tittle:tittle, description:description }),
+                headers: { 'Content-Type': 'application/json' },
+            })
+        }        
         router.push("/")
+        router.refresh()
     }
 
     return (
@@ -52,12 +43,24 @@ function NewPage({ params }) {
                 <label htmlFor="title" className='font-bold text-sm'>Titulo</label>
                 <input type='text' className='border border-gray-400 p-2 mb-4 w-full text-black' placeholder='Titulo' id='title' 
                 onChange={(e) => setTitle(e.target.value)}
-                value={title}/>
+                value={tittle}/>
                 <label htmlFor="description" className='font-bold text-sm'>Descripcion</label>
                 <textarea rows="3" className='border border-gray-400 p-2 mb-4 w-full text-black' placeholder='Describe tu tarea' id='description' 
                 onChange={(e) => setDescription(e.target.value)}
                 value={description}></textarea>
                 <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>Crear</button>
+                {params.id && (
+                    <button className='bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-4' type='button'
+                    onClick={async() => {
+                        await fetch(`/api/task/${params.id}`, {
+                            method: "DELETE"
+                        })
+                        router.push("/")
+                        router.refresh()
+                    }}>
+                        Eliminar
+                    </button>
+                )}
             </form>
         </div>
     )

@@ -1,7 +1,7 @@
 "use client"
 import { useRouter } from "next/navigation"
 
-function taskCard({ task }) {
+function TaskCard({ task }) {
 
     const router = useRouter()
     return (
@@ -13,4 +13,4 @@ function taskCard({ task }) {
     )
 }
 
-export default taskCard
+export default TaskCard
